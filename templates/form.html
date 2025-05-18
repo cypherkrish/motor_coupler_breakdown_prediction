@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Steel Plant Maintenance Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('/static/steel_image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+        }
+
+        .overlay {
+            background-color: rgba(255, 255, 255, 0.88);
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            color: #004080;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #005cbf;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #003f7f;
+        }
+
+        .result {
+            margin-top: 25px;
+            background-color: #e8f4fa;
+            padding: 15px;
+            border-left: 5px solid #007acc;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="overlay">
+        <h2>Steel Plant: Maintenance Risk Prediction</h2>
+        <form method="post" action="/predict">
+            {% for i in range(feature_names|length) %}
+            <div class="input-group">
+                <label>{{ feature_names[i] }}</label>
+                <input type="number" step="any" name="features" required>
+            </div>
+            {% endfor %}
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="result">
+            <strong>Predicted Maintenance Risk: {{ prediction }}</strong>
+        </div>
+
+        <canvas id="chart" width="400" height="200"></canvas>
+        <!--<script>
+        const ctx = document.getElementById('chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ feature_names|tojson }},
+                datasets: [{
+                    label: 'Input Values',
+                    data: {{ features|tojson }},
+                    backgroundColor: 'rgba(0, 123, 255, 0.6)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        </script>-->
+        {% endif %}
+    </div>
+</body>
+</html>
